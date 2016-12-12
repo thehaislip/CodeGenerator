@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CodeGenerator.GeneratorClases;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -27,7 +28,7 @@ namespace CodeGenerator
         public MainWindow()
         {
             InitializeComponent();
-            loadDatabases();
+           // loadDatabases();
         }
 
 
@@ -37,7 +38,7 @@ namespace CodeGenerator
             connectionWindow.ShowDialog();
             conn = connectionWindow.Connection;
             txtConnectionString.Text = conn.ConnectionString;
-            loadDatabases();
+          //  loadDatabases();
             // SqlConnection result = connectionWindow.ShowDialog();
         }
 
@@ -55,7 +56,9 @@ namespace CodeGenerator
 
         private void btnDatabaseClasses_Click(object sender, RoutedEventArgs e)
         {
-           var saveLocation = PickFolder();
+        //   var saveLocation = PickFolder();
+            var repo = new ContextRepository(conn);
+            repo.GetContextString();
         }
 
         private void btnViewClasses_Click(object sender, RoutedEventArgs e)

@@ -21,3 +21,26 @@ c:\users\teddy-pc\documents\visual studio 2015\Projects\CodeGenerator\CodeGenera
 c:\users\teddy-pc\documents\visual studio 2015\Projects\CodeGenerator\CodeGenerator\bin\Debug\EntityFramework.xml
 c:\users\teddy-pc\documents\visual studio 2015\Projects\CodeGenerator\CodeGenerator\bin\Debug\EntityFramework.SqlServer.xml
 c:\users\teddy-pc\documents\visual studio 2015\Projects\CodeGenerator\CodeGenerator\obj\Debug\CodeGenerator_Content.g.cs
+D:\Work\apps\CodeGenerator-master\bin\Debug\CodeGenerator.exe.config
+D:\Work\apps\CodeGenerator-master\obj\Debug\CodeGenerator.exe
+D:\Work\apps\CodeGenerator-master\obj\Debug\CodeGenerator.pdb
+D:\Work\apps\CodeGenerator-master\bin\Debug\info.mdf
+D:\Work\apps\CodeGenerator-master\bin\Debug\info_log.ldf
+D:\Work\apps\CodeGenerator-master\bin\Debug\CodeGenerator.exe
+D:\Work\apps\CodeGenerator-master\bin\Debug\CodeGenerator.pdb
+D:\Work\apps\CodeGenerator-master\bin\Debug\EntityFramework.dll
+D:\Work\apps\CodeGenerator-master\bin\Debug\EntityFramework.SqlServer.dll
+D:\Work\apps\CodeGenerator-master\bin\Debug\EntityFramework.xml
+D:\Work\apps\CodeGenerator-master\bin\Debug\EntityFramework.SqlServer.xml
+D:\Work\apps\CodeGenerator-master\obj\Debug\CodeGenerator.csprojResolveAssemblyReference.cache
+D:\Work\apps\CodeGenerator-master\obj\Debug\ConnectionString.g.cs
+D:\Work\apps\CodeGenerator-master\obj\Debug\MainWindow.g.cs
+D:\Work\apps\CodeGenerator-master\obj\Debug\App.g.cs
+D:\Work\apps\CodeGenerator-master\obj\Debug\CodeGenerator_Content.g.cs
+D:\Work\apps\CodeGenerator-master\obj\Debug\CodeGenerator_MarkupCompile.cache
+D:\Work\apps\CodeGenerator-master\obj\Debug\CodeGenerator_MarkupCompile.lref
+D:\Work\apps\CodeGenerator-master\obj\Debug\ConnectionString.baml
+D:\Work\apps\CodeGenerator-master\obj\Debug\MainWindow.baml
+D:\Work\apps\CodeGenerator-master\obj\Debug\CodeGenerator.g.resources
+D:\Work\apps\CodeGenerator-master\obj\Debug\CodeGenerator.Properties.Resources.resources
+D:\Work\apps\CodeGenerator-master\obj\Debug\CodeGenerator.csproj.GenerateResource.Cache

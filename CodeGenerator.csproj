@@ -85,7 +85,12 @@
     <Compile Include="Context.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="DatabaseColumn.cs" />
+    <Compile Include="DatabaseRelationship.cs" />
     <Compile Include="DatabaseTable.cs" />
+    <Compile Include="GeneratorClases\AngularViewRepository.cs" />
+    <Compile Include="GeneratorClases\ContextRepository.cs" />
+    <Compile Include="GeneratorClases\ViewClassRepository.cs" />
+    <Compile Include="SchemaRepository.cs" />
     <Compile Include="SQLConnection.cs" />
     <Compile Include="UserInfoRepository.cs" />
     <Page Include="ConnectionString.xaml">
