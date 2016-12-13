@@ -24,11 +24,11 @@ namespace CodeGenerator
     {
         public SqlConnection conn { get; set; }
         public string connString { get; set; }
-        
+
         public MainWindow()
         {
             InitializeComponent();
-           // loadDatabases();
+            // loadDatabases();
         }
 
 
@@ -37,8 +37,9 @@ namespace CodeGenerator
             ConnectionString connectionWindow = new ConnectionString();
             connectionWindow.ShowDialog();
             conn = connectionWindow.Connection;
-            txtConnectionString.Text = conn.ConnectionString;
-          //  loadDatabases();
+            connString = conn.ConnectionString;
+            txtConnectionString.Text = connString;
+            //  loadDatabases();
             // SqlConnection result = connectionWindow.ShowDialog();
         }
 
@@ -52,13 +53,19 @@ namespace CodeGenerator
             }
         }
 
-       
+
 
         private void btnDatabaseClasses_Click(object sender, RoutedEventArgs e)
         {
-        //   var saveLocation = PickFolder();
+            //   var saveLocation = PickFolder();
+            if (conn.ConnectionString == "")
+            {
+                conn.ConnectionString = connString;
+            }
             var repo = new ContextRepository(conn);
-            repo.GetContextString();
+
+            var w = repo.GetContextString(conn.Database);
+            w = "";
         }
 
         private void btnViewClasses_Click(object sender, RoutedEventArgs e)
@@ -71,10 +78,11 @@ namespace CodeGenerator
             var saveLocation = PickFolder();
         }
 
-        private string PickFolder() {
+        private string PickFolder()
+        {
             var fld = new System.Windows.Forms.FolderBrowserDialog();
             var result = fld.ShowDialog();
-            if (result == System.Windows.Forms.DialogResult.OK )
+            if (result == System.Windows.Forms.DialogResult.OK)
             {
                 return fld.SelectedPath;
             }

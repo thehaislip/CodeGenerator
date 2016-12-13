@@ -12,7 +12,10 @@ namespace CodeGenerator
         public string DataType { get; set; }
         public string Length { get; set; }
         public bool IsNull { get; set; }
-        public string Precision { get; internal set; }
-        public string Scale { get; internal set; }
+        public string Precision { get;  set; }
+        public string Scale { get;  set; }
+        public string ExtendedPropName { get;  set; }
+        public string ExtendedProp { get;  set; }
+        public bool PrimaryKey { get; internal set; }
     }
 }

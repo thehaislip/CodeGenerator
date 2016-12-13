@@ -2,9 +2,9 @@
 {
     public class DatabaseRelationship
     {
-        public string ChildTable { get; internal set; }
-        public string FKColumn { get; internal set; }
-        public string ParentTable { get; internal set; }
-        public string PKColumn { get; internal set; }
+        
+        public string Column { get; internal set; }
+        public string RelationshipType { get; internal set; }
+        public string Table { get; internal set; }
     }
 }
