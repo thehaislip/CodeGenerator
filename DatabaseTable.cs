@@ -6,12 +6,16 @@ using System.Threading.Tasks;
 
 namespace CodeGenerator
 {
-    class DatabaseTable
+   public class DatabaseTable
     {
-       
-        public IEnumerable<DatabaseColumn> Columns { get; internal set; }
+        public DatabaseTable()
+        {
+            this.Columns = new List<DatabaseColumn>();
+            this.NavigationProperties = new List<DatabaseRelationship>();
+        }
+        public List<DatabaseColumn> Columns { get; internal set; }
         public string Name { get; internal set; }
-        public IEnumerable<DatabaseRelationship> NavigationProperties { get; internal set; }
+        public List<DatabaseRelationship> NavigationProperties { get; internal set; }
        
     }
 }

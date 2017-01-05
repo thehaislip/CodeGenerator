@@ -1,28 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
+
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace CodeGenerator
 {
     class UserInfoRepository
     {
-        Context cn;
+
+        public string sysPath { get; set; }
+        public string fileName { get; set; }
+        public string filepath { get; set; }
+
         public UserInfoRepository()
         {
-            cn = new Context();
+            sysPath = System.Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+            fileName = "CodeGen.json";
+            filepath = Path.Combine(sysPath, fileName);
         }
-        public string GetConnectionString(int id) {
-            return cn.Databases.FirstOrDefault(e => e.Id == id).ConnectionString;
-        }
-        public IEnumerable<Database> ListDatabases() {
-            return cn.Databases.ToList();
-        }
-        public void saveConnection(string name, string connectioString,string nameSpace)
+        public string GetConnectionString(string databaseName)
         {
-            cn.Entry(new Database() { Name = name, ConnectionString = connectioString }).State = System.Data.Entity.EntityState.Added;
-            cn.SaveChanges();
+            return ListSettings().Where(e => e.Name == databaseName).Select(e => e.ConnectionString).FirstOrDefault();
+        }
+        public IEnumerable<string> ListDatabases()
+        {
+            return ListSettings().Select(e => e.Name);
+        }
+        public void saveConnection(string name, string connectioString, string nameSpace)
+        {
+            List<ConnectionSettings> data = new List<ConnectionSettings>();
+            data = ListSettings();
+            data.Add(new ConnectionSettings { Name = name, ConnectionString = connectioString, Namespace = nameSpace });
+            File.WriteAllText(filepath, JsonConvert.SerializeObject(data));
+        }
+
+        private List<ConnectionSettings> ListSettings() {
+            var fileText = "";
+            List<ConnectionSettings> data = new List<ConnectionSettings>();
+            if (File.Exists(filepath))
+            {
+                fileText = File.ReadAllText(filepath);
+                data = JsonConvert.DeserializeObject<List<ConnectionSettings>>(fileText);
+            }
+            return data;
         }
     }
 }

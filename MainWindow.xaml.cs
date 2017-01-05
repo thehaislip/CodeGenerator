@@ -28,7 +28,7 @@ namespace CodeGenerator
         public MainWindow()
         {
             InitializeComponent();
-            // loadDatabases();
+             loadDatabases();
         }
 
 
@@ -39,7 +39,7 @@ namespace CodeGenerator
             conn = connectionWindow.Connection;
             connString = conn.ConnectionString;
             txtConnectionString.Text = connString;
-            //  loadDatabases();
+             loadDatabases();
             // SqlConnection result = connectionWindow.ShowDialog();
         }
 
@@ -47,8 +47,8 @@ namespace CodeGenerator
         {
             if (cbPreviousDb.SelectedValue != null)
             {
-                var selection = (int)cbPreviousDb.SelectedValue;
-                connString = new UserInfoRepository().GetConnectionString(selection);
+                var selection = cbPreviousDb.SelectedValue;
+                connString = new UserInfoRepository().GetConnectionString(selection.ToString());
                 txtConnectionString.Text = connString;
             }
         }
@@ -58,14 +58,20 @@ namespace CodeGenerator
         private void btnDatabaseClasses_Click(object sender, RoutedEventArgs e)
         {
             //   var saveLocation = PickFolder();
+            if (conn == null)
+            {
+                conn = new SqlConnection(connString);
+            }
             if (conn.ConnectionString == "")
             {
                 conn.ConnectionString = connString;
             }
-            var repo = new ContextRepository(conn);
+            var schemaRepo = new SchemaRepository(conn);
+            var repo = new ContextRepository(schemaRepo);
 
-            var w = repo.GetContextString(conn.Database);
-            w = "";
+            var contextString = repo.GetContextString(conn.Database);
+            var classes = repo.GetEntityClasses();
+            
         }
 
         private void btnViewClasses_Click(object sender, RoutedEventArgs e)
@@ -92,8 +98,6 @@ namespace CodeGenerator
         private void loadDatabases()
         {
             cbPreviousDb.ItemsSource = new UserInfoRepository().ListDatabases();
-            cbPreviousDb.DisplayMemberPath = "Name";
-            cbPreviousDb.SelectedValuePath = "Id";
         }
     }
 }

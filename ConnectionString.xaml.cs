@@ -65,7 +65,8 @@ namespace CodeGenerator
             if (new SQLConnection().TestConnection(txtServer.Text, txtDatabase.Text, txtUsername.Text, txtPassword.Text, iswindowsAuth))
             {
                 Connection = new SQLConnection().GetConnection(txtServer.Text, txtDatabase.Text, txtUsername.Text, txtPassword.Text, iswindowsAuth);
-               // new UserInfoRepository().saveConnection(txtDatabase.Text, Connection.ConnectionString, "");
+
+                new UserInfoRepository().saveConnection(txtDatabase.Text, Connection.ConnectionString, txtNamespace.Text);
                 this.Close();
             }
             else {

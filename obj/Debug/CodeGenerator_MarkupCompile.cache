@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-C:\Users\Teddy-PC\Documents\Visual Studio 2015\Projects\CodeGenerator\CodeGenerator\obj\Debug\
+D:\Repos\CodeGenerator\obj\Debug\
 CodeGenerator
 none
 false
 DEBUG;TRACE
-C:\Users\Teddy-PC\Documents\Visual Studio 2015\Projects\CodeGenerator\CodeGenerator\App.xaml
+D:\Repos\CodeGenerator\App.xaml
 2-1529604937
 21722692148
-18-1738286922
-191736547287
+19-141327770
+202028870704
 ConnectionString.xaml;MainWindow.xaml;
 
 False

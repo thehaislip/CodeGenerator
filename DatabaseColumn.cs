@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CodeGenerator
 {
-    class DatabaseColumn
+    public class DatabaseColumn
     {
         public string Name { get; set; }
         public string DataType { get; set; }

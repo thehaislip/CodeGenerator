@@ -8,10 +8,10 @@
         Title="MainWindow" Height="350" Width="525" FontFamily="Constantia" FontSize="16">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />
-            <ColumnDefinition />
-            <ColumnDefinition />
+            <ColumnDefinition Width="151*" />
+            <ColumnDefinition Width="151*" />
+            <ColumnDefinition Width="150*" />
+            <ColumnDefinition Width="65*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="48*" />
@@ -20,9 +20,9 @@
             <RowDefinition Height="64*" />
             <RowDefinition Height="63*" />
         </Grid.RowDefinitions>
-        <Button x:Name="btnConnection" Content="New Connection" Grid.Column="0" Click="btnConnection_Click" Height="20"/>
+        <Button x:Name="btnConnection" Content="New Connection" Grid.Column="0" Click="btnConnection_Click" Margin="10,10"/>
         <TextBlock x:Name="txtConnectionString" Grid.Column="1"  TextWrapping="Wrap" Text=""   Margin="10,15" Grid.ColumnSpan="3"/>
-        <Label Grid.Row="1" Content="Database" Margin="10,0" VerticalAlignment="Center"></Label>
+        <Label Grid.Row="1" Content="Database" Margin="10,25" VerticalAlignment="Center" Height="30"></Label>
         <ComboBox Name="cbPreviousDb" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Margin="10,25" SelectionChanged="cbPreviousDb_SelectionChanged">
         </ComboBox>
         <Button x:Name="btnDatabaseClasses" Content="Database" Grid.Row="2" Margin="10" Click="btnDatabaseClasses_Click"  />

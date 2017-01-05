@@ -9,32 +9,21 @@ namespace CodeGenerator.GeneratorClases
 {
     class ContextRepository
     {
-        private SqlConnection conn;
+
         private SchemaRepository schema;
-
-        public ContextRepository() : this(new SqlConnection())
+        private IEnumerable<DatabaseTable> tables;
+        public ContextRepository(SchemaRepository schema)
         {
-            schema = new SchemaRepository();
-        }
-
-        public ContextRepository(SqlConnection conn)
-        {
-            this.conn = conn;
-            schema = new SchemaRepository();
+            this.schema = schema;
+            tables = schema.ListTables();
         }
 
         public string GetContextString(string databaseName)
         {
-            IEnumerable<DatabaseTable> tables;
-            using (conn)
-            {
-                tables = schema.ListTables(conn);
-            }
-
-            return buildContextClass(tables, databaseName);
+            return buildContextClass(databaseName);
         }
 
-        public string buildContextClass(IEnumerable<DatabaseTable> tables, string databaseName)
+        public string buildContextClass( string databaseName)
         {
             var sb = new StringBuilder();
             sb.GetUsings()
@@ -51,7 +40,8 @@ namespace CodeGenerator.GeneratorClases
             return sb.ToString();
         }
 
-        public string GetEntitySets(IEnumerable<DatabaseTable> tables) {
+        public string GetEntitySets(IEnumerable<DatabaseTable> tables)
+        {
             var sb = new StringBuilder();
             foreach (var table in tables)
             {
@@ -64,7 +54,7 @@ namespace CodeGenerator.GeneratorClases
             var sb = new StringBuilder();
             sb.AppendLine("protected override void OnModelCreating(DbModelBuilder modelBuilder)")
                   .AppendLine("{").ToString();
-            foreach (var table in tables)
+            foreach (var table in tables.Take(10))
             {
                 foreach (var colum in table.Columns.Where(e => e.DataType.ToLower() == "varchar"))
                 {
@@ -77,6 +67,23 @@ namespace CodeGenerator.GeneratorClases
             return sb.ToString();
         }
 
+        public string GetEntityClasses()
+        {
+            var sb = new StringBuilder();
+            sb.GetUsings()
+                .GetNamespace("GeneratedContext");
+            foreach (var table in tables)
+            {
+                sb.GetClass($"{table.Name}","");
+                sb.GetConstructor(table);
+                sb.GetClassEnd();
+                foreach (var column in table.Columns)
+                {
 
+                }
+            }
+                
+            return sb.ToString();
+        }
     }
 }
