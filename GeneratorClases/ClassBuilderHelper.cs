@@ -59,6 +59,11 @@ namespace CodeGenerator.GeneratorClases
         }
         public static StringBuilder GetProperty(this StringBuilder sb, DatabaseColumn column)
         {
+            if (column.PrimaryKey)
+            {
+                sb.AppendLine("[Key]");
+                sb.AppendLine("[DatabaseGenerated(DatabaseGeneratedOption.Identity)]");
+            }
             sb.AppendLine($"public {ConvertToCSharpType(column.DataType)} {column.Name}" + " {get; set;}");
             return sb;
         }
