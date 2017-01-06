@@ -29,10 +29,10 @@ namespace CodeGenerator
             var tblList = new List<DatabaseTable>();
             var lst = new List<DatabaseColumn>();
             var cmdText = "";
-            sb.Append("select c.table_name, c.COLUMN_NAME, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, NUMERIC_PRECISION, Numeric_Scale , ep.[Extended_Property_Name], ep.[Extended_Property], case when i2.column_name is not null then 1 else 0 end [PrimaryKey]")
+            sb.Append("select c.table_name, c.COLUMN_NAME, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, NUMERIC_PRECISION, Numeric_Scale , ep.[Extended_Property_Name], ep.[Extended_Property],max( case when i1.CONSTRAINT_TYPE = 'PRIMARY Key'  then 1 else 0 end) [PrimaryKey],max(case when i1.CONSTRAINT_TYPE = 'FOREIGN KEY' then 1 else 0 end) [FOREIGNKEY]")
                 .Append(" from INFORMATION_SCHEMA.COLUMNS c")
                 .Append(" left JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE i2 ON c.COLUMN_NAME = i2.COLUMN_NAME and c.TABLE_NAME = i2.TABLE_NAME")
-                .Append(" left join INFORMATION_SCHEMA.TABLE_CONSTRAINTS i1 on i1.CONSTRAINT_NAME = i2.CONSTRAINT_NAME and i1.CONSTRAINT_TYPE = 'PRIMARY KEY'")
+                .Append(" left join INFORMATION_SCHEMA.TABLE_CONSTRAINTS i1 on i1.CONSTRAINT_NAME = i2.CONSTRAINT_NAME")
                 .Append(" left JOIN (SELECT major_id, minor_id, t.name AS [Table_Name], c.name AS[Column_Name], value AS[Extended_Property],ep.name[Extended_Property_Name]")
                 .Append(" FROM sys.extended_properties AS ep")
                 .Append(" INNER JOIN sys.tables AS t ON ep.major_id = t.object_id ")
@@ -41,6 +41,7 @@ namespace CodeGenerator
                 .Append(" ep on ep.[Column_Name] = c.COLUMN_NAME")
                 .Append(" join sys.tables t on t.name = c.TABLE_NAME")
                 .Append(" where t.type = 'u' and t.name not like 'sysdiagrams%' and t.name not like '%aud' and t.name not like '%audit' ")
+                .Append(" group by c.table_name, c.COLUMN_NAME, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, NUMERIC_PRECISION, Numeric_Scale , ep.[Extended_Property_Name], ep.[Extended_Property]")
                 .Append(" order by c.table_name");
                 //.Append($" where c.TABLE_NAME = @tableName");
             cmdText = sb.ToString();
@@ -77,7 +78,8 @@ namespace CodeGenerator
                         Scale = rdr["Numeric_Scale"].ToString(),
                         ExtendedPropName = rdr["Extended_Property_Name"].ToString(),
                         ExtendedProp = rdr["Extended_Property"].ToString(),
-                        PrimaryKey = rdr["PrimaryKey"].ToString() == "1"
+                        PrimaryKey = rdr["PrimaryKey"].ToString() == "1",
+                        ForeignKey = rdr["FOREIGNKEY"].ToString() == "1"
                     });
                     
                 }

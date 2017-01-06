@@ -13,9 +13,10 @@ namespace CodeGenerator.GeneratorClases
         {
             return sb.AppendLine("using System;")
                 .AppendLine("using System.Data.Entity;")
-                .AppendLine(" using System.ComponentModel.DataAnnotations;")
+                .AppendLine("using System.ComponentModel.DataAnnotations;")
                 .AppendLine("using System.ComponentModel.DataAnnotations.Schema;")
-                .AppendLine("using System.Linq;");
+                .AppendLine("using System.Linq;")
+                .AppendLine("using System.Collections.Generic;");
 
         }
         public static StringBuilder GetNamespace(this StringBuilder sb, string ns)
@@ -59,43 +60,88 @@ namespace CodeGenerator.GeneratorClases
         }
         public static StringBuilder GetProperty(this StringBuilder sb, DatabaseColumn column)
         {
+            sb.GetDecorators(column);
+            sb.AppendLine($"public {ConvertToCSharpType(column)} {column.Name}" + " {get; set;}");
+            return sb;
+        }
+
+        private static string ConvertToCSharpType(DatabaseColumn column)
+        {
+            string strReturn;
+            switch (column.DataType.ToLower())
+            {
+                case "int":
+                    strReturn = "int";
+                    break;
+                case "decimal":
+                case "money":
+                    strReturn = "decimal";
+                    break;
+                case "float":
+                    strReturn = "double";
+                    break;
+                case "bit":
+                    strReturn = "bool";
+                    break;
+                case "date":
+                case "datetime":
+                case "datetime2":
+                    strReturn = "DateTime";
+                    break;
+                case "varchar":
+                case "nvarchar":
+                    strReturn = "string";
+                    break;
+                case "timestamp":
+                    strReturn = "byte[]";
+                    break;
+                case "uniqueidentifier":
+                    strReturn = "Guid";
+                    break;
+                default:
+                    strReturn = column.DataType;
+                    break;
+            }
+            if (column.IsNull)
+            {
+                if (strReturn != "string" && strReturn != "byte[]")
+                {
+                    strReturn += "?";
+                }
+            }
+            return strReturn;
+        }
+        private static StringBuilder GetDecorators(this StringBuilder sb, DatabaseColumn column)
+        {
             if (column.PrimaryKey)
             {
                 sb.AppendLine("[Key]");
                 sb.AppendLine("[DatabaseGenerated(DatabaseGeneratedOption.Identity)]");
             }
-            sb.AppendLine($"public {ConvertToCSharpType(column.DataType)} {column.Name}" + " {get; set;}");
-            return sb;
-        }
-
-        private static string ConvertToCSharpType(string dataType)
-        {
-            string strReturn;
-            switch (dataType.ToLower())
+            if (!column.IsNull)
             {
-                case "Integer":
-                    strReturn = "int";
+                sb.AppendLine("[Required]");
+            }
+            switch (column.DataType.ToLower())
+            {
+                case "money":
+                case "date":
+                case "datetime2":
+                    sb.AppendLine($"[Column(TypeName = \"{column.DataType.ToLower()}\")]");
                     break;
-                case "Decimal":
-                    strReturn = "decimal";
+                case "timestamp":
+                    sb.AppendLine($"[Column(TypeName = \"{column.DataType.ToLower()}\")]");
+                    sb.AppendLine("[DatabaseGenerated(DatabaseGeneratedOption.Computed)]");
+                    sb.AppendLine("[MaxLength(8)]");
                     break;
-                case "Double":
-                    strReturn = "double";
-                    break;
-                case "Boolean":
-                    strReturn = "bool";
-                    break;
-                case "Date":
-                    strReturn = "DateTime";
-                    break;
-                case "String":
-                    strReturn = "string";
+                case "varchar":
+                case "nvarchar":
+                    sb.AppendLine($"[StringLength({column.Length})]");
                     break;
                 default:
-                    strReturn = dataType;
                     break;
             }
-            return strReturn;
+            return sb;
         }
     }
 }

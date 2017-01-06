@@ -23,12 +23,12 @@ namespace CodeGenerator.GeneratorClases
             return buildContextClass(databaseName);
         }
 
-        public string buildContextClass( string databaseName)
+        public string buildContextClass(string databaseName)
         {
             var sb = new StringBuilder();
             sb.GetUsings()
                 .GetNamespace("GeneratedContext")
-                .GetClass($"{databaseName}Context", "DbContext")
+                .GetClass("Context", "DbContext")
                 .AppendLine(" public Context()")
                 .AppendLine($": base(\"name = {databaseName}Context\")")
                 .AppendLine("{")
@@ -70,19 +70,30 @@ namespace CodeGenerator.GeneratorClases
         public string GetEntityClasses()
         {
             var sb = new StringBuilder();
-            sb.GetUsings()
-                .GetNamespace("GeneratedContext");
+            //sb.GetUsings();
+            sb.GetNamespace("GeneratedContext");
             foreach (var table in tables)
             {
-                sb.GetClass($"{table.Name}","");
+                sb.GetClass($"{table.Name}", "");
                 sb.GetConstructor(table);
-                sb.GetClassEnd();
                 foreach (var column in table.Columns)
                 {
-
+                    sb.GetProperty(column);
                 }
+                foreach (var navProp in table.NavigationProperties)
+                {
+                    if (navProp.RelationshipType == "One")
+                    {
+                        sb.AppendLine($"public virtual {navProp.RelatedTable} {navProp.RelatedTable}" + "{get; set;}");
+                    }
+                    else
+                    {
+                        sb.AppendLine($"public virtual ICollection<{navProp.RelatedTable}> {navProp.RelatedTable}s" + "{get; set;}");
+                    }
+                }
+                sb.GetClassEnd();
             }
-                
+            sb.GetNamespaceEnd();
             return sb.ToString();
         }
     }

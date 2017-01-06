@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -57,7 +58,7 @@ namespace CodeGenerator
 
         private void btnDatabaseClasses_Click(object sender, RoutedEventArgs e)
         {
-            //   var saveLocation = PickFolder();
+            
             if (conn == null)
             {
                 conn = new SqlConnection(connString);
@@ -66,31 +67,50 @@ namespace CodeGenerator
             {
                 conn.ConnectionString = connString;
             }
+            var saveLocation = PickFolder(conn.Database + "Context.cs");
             var schemaRepo = new SchemaRepository(conn);
             var repo = new ContextRepository(schemaRepo);
 
             var contextString = repo.GetContextString(conn.Database);
             var classes = repo.GetEntityClasses();
-            
+            contextString += classes;
+            File.WriteAllText(saveLocation,contextString);
         }
 
         private void btnViewClasses_Click(object sender, RoutedEventArgs e)
         {
-            var saveLocation = PickFolder();
+            if (conn == null)
+            {
+                conn = new SqlConnection(connString);
+            }
+            if (conn.ConnectionString == "")
+            {
+                conn.ConnectionString = connString;
+            }
+            var saveLocation = PickFolder(conn.Database + "Views.cs");
         }
 
         private void btnAngularClasses_Click(object sender, RoutedEventArgs e)
         {
-            var saveLocation = PickFolder();
+            if (conn == null)
+            {
+                conn = new SqlConnection(connString);
+            }
+            if (conn.ConnectionString == "")
+            {
+                conn.ConnectionString = connString;
+            }
+            var saveLocation = PickFolder(conn.Database + "Interfaces.ts");
         }
 
-        private string PickFolder()
+        private string PickFolder(string fileName)
         {
-            var fld = new System.Windows.Forms.FolderBrowserDialog();
+            var fld = new System.Windows.Forms.SaveFileDialog();
+            fld.FileName = fileName;
             var result = fld.ShowDialog();
             if (result == System.Windows.Forms.DialogResult.OK)
             {
-                return fld.SelectedPath;
+                return fld.FileName;
             }
             return "";
         }

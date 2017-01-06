@@ -17,5 +17,6 @@ namespace CodeGenerator
         public string ExtendedPropName { get;  set; }
         public string ExtendedProp { get;  set; }
         public bool PrimaryKey { get; internal set; }
+        public bool ForeignKey { get; internal set; }
     }
 }
