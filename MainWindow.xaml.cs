@@ -29,7 +29,7 @@ namespace CodeGenerator
         public MainWindow()
         {
             InitializeComponent();
-             loadDatabases();
+            loadDatabases();
         }
 
 
@@ -40,7 +40,7 @@ namespace CodeGenerator
             conn = connectionWindow.Connection;
             connString = conn.ConnectionString;
             txtConnectionString.Text = connString;
-             loadDatabases();
+            loadDatabases();
             // SqlConnection result = connectionWindow.ShowDialog();
         }
 
@@ -58,7 +58,7 @@ namespace CodeGenerator
 
         private void btnDatabaseClasses_Click(object sender, RoutedEventArgs e)
         {
-            
+
             if (conn == null)
             {
                 conn = new SqlConnection(connString);
@@ -68,13 +68,16 @@ namespace CodeGenerator
                 conn.ConnectionString = connString;
             }
             var saveLocation = PickFolder(conn.Database + "Context.cs");
-            var schemaRepo = new SchemaRepository(conn);
-            var repo = new ContextRepository(schemaRepo);
+            if (saveLocation != "")
+            {
+                var schemaRepo = new SchemaRepository(conn);
+                var repo = new ContextRepository(schemaRepo);
+                var contextString = repo.GetContextString(conn.Database);
+                var classes = repo.GetEntityClasses();
+                contextString += classes;
+                File.WriteAllText(saveLocation, contextString);
+            }
 
-            var contextString = repo.GetContextString(conn.Database);
-            var classes = repo.GetEntityClasses();
-            contextString += classes;
-            File.WriteAllText(saveLocation,contextString);
         }
 
         private void btnViewClasses_Click(object sender, RoutedEventArgs e)

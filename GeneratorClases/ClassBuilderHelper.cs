@@ -16,7 +16,10 @@ namespace CodeGenerator.GeneratorClases
                 .AppendLine("using System.ComponentModel.DataAnnotations;")
                 .AppendLine("using System.ComponentModel.DataAnnotations.Schema;")
                 .AppendLine("using System.Linq;")
-                .AppendLine("using System.Collections.Generic;");
+                .AppendLine("using System.Collections.Generic;")
+                .AppendLine("using System.Collections.ObjectModel;")
+                .AppendLine("using System.Data.Entity.Infrastructure;")
+                .AppendLine("using System.Security.Principal;");
 
         }
         public static StringBuilder GetNamespace(this StringBuilder sb, string ns)
@@ -35,13 +38,16 @@ namespace CodeGenerator.GeneratorClases
             return sb;
         }
 
-        public static StringBuilder GetConstructor(this StringBuilder sb, DatabaseTable table)
+        public static StringBuilder GetConstructor(this StringBuilder sb, DatabaseTable table, bool isAudit = false)
         {
-            sb.AppendLine($"public {table.Name}()");
+            sb.AppendLine($"public {table.Name}{(isAudit ? "Audit" : "")}()");
             sb.AppendLine("{");
-            foreach (var item in table.NavigationProperties.Where(e => e.RelationshipType == "Many"))
+            if (!isAudit)
             {
-                sb.AppendLine($"this.{item.RelatedTable}s = new HashSet<{item.RelatedTable}>();");
+                foreach (var item in table.NavigationProperties.Where(e => e.RelationshipType == "Many"))
+                {
+                    sb.AppendLine($"this.{item.RelatedTable}s = new HashSet<{item.RelatedTable}>();");
+                }
             }
             sb.AppendLine("}");
             return sb;
@@ -61,7 +67,7 @@ namespace CodeGenerator.GeneratorClases
         public static StringBuilder GetProperty(this StringBuilder sb, DatabaseColumn column)
         {
             sb.GetDecorators(column);
-            sb.AppendLine($"public {ConvertToCSharpType(column)} {column.Name}" + " {get; set;}");
+            sb.AppendLine($"public {ConvertToCSharpType(column)} {Humanizer.StringDehumanizeExtensions.Dehumanize(column.Name)}" + " {get; set;}");
             return sb;
         }
 
@@ -71,6 +77,7 @@ namespace CodeGenerator.GeneratorClases
             switch (column.DataType.ToLower())
             {
                 case "int":
+                case "tinyint":
                     strReturn = "int";
                     break;
                 case "decimal":
@@ -86,6 +93,7 @@ namespace CodeGenerator.GeneratorClases
                 case "date":
                 case "datetime":
                 case "datetime2":
+                case "smalldatetime":
                     strReturn = "DateTime";
                     break;
                 case "varchar":
@@ -93,6 +101,7 @@ namespace CodeGenerator.GeneratorClases
                     strReturn = "string";
                     break;
                 case "timestamp":
+                case "image":
                     strReturn = "byte[]";
                     break;
                 case "uniqueidentifier":

@@ -126,6 +126,7 @@ namespace CodeGenerator
                 {
 
                     var rel = new DatabaseRelationship();
+                    rel.Column = rdr["ColumnName"].ToString();
                     rel.Table = rdr["TableName"].ToString();
                     rel.Column = rdr["ColumnName"].ToString();
                     rel.RelatedTable = rdr["RelatedTable"].ToString();
