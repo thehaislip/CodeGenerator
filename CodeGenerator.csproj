@@ -92,8 +92,6 @@
     </ApplicationDefinition>
     <Compile Include="AngularInterfaceRepository.cs" />
     <Compile Include="ConnectionSettings.cs" />
-    <Compile Include="Context.cs" />
-    <Compile Include="Database.cs" />
     <Compile Include="DatabaseColumn.cs" />
     <Compile Include="DatabaseRelationship.cs" />
     <Compile Include="DatabaseTable.cs" />

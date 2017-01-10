@@ -319,7 +319,7 @@ namespace CodeGenerator.GeneratorClases
             sb.AppendLine("// Perform the updates.");
             sb.AppendLine("try");
             sb.AppendLine("{");
-            sb.AppendLine("var changes = ChangeTracker.Entries<IAuditable>().Where(i => i.State == EntityState.Added);");
+            sb.AppendLine("var changes = ChangeTracker.Entries<IAuditable>();");
             sb.AppendLine("base.SaveChanges();");
             sb.AppendLine("foreach (var audit in audits)");
             sb.AppendLine("{");
@@ -347,7 +347,7 @@ namespace CodeGenerator.GeneratorClases
             sb.AppendLine("}");
             sb.AppendLine("return base.SaveChanges();");
             sb.AppendLine("}");
-            sb.AppendLine("catch (Exception)");
+            sb.AppendLine("catch (Exception ex)");
             sb.AppendLine("{");
             sb.AppendLine("// Updated failed so remove the audit entities.");
             sb.AppendLine("foreach (var item in audits)");

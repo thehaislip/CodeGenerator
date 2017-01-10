@@ -137,7 +137,10 @@ namespace CodeGenerator.GeneratorClases
             }
             if (!column.IsNull)
             {
-                sb.AppendLine("[Required]");
+                if (column.DataType.ToLower() != "timestamp")
+                {
+                    sb.AppendLine("[Required]");
+                }
             }
             switch (column.DataType.ToLower())
             {
