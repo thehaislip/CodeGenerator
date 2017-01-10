@@ -115,7 +115,7 @@ namespace CodeGenerator
             {
                 var schemaRepo = new SchemaRepository(conn);
                 var repo = new AngularInterfaceRepository(schemaRepo);
-                var angularString = repo.GetContextString(conn.Database);
+                var angularString = repo.GetInterfaceString(conn.Database);
                 File.WriteAllText(saveLocation, angularString);
             }
         }
