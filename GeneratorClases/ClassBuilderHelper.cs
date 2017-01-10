@@ -67,7 +67,15 @@ namespace CodeGenerator.GeneratorClases
         public static StringBuilder GetProperty(this StringBuilder sb, DatabaseColumn column, bool isEntity = true)
         {
             sb.GetDecorators(column,isEntity);
-            sb.AppendLine($"public {ConvertToCSharpType(column)} {Humanizer.StringDehumanizeExtensions.Dehumanize(column.Name)}" + " {get; set;}");
+            if (column.Name.ToLower() == "id")
+            {
+                sb.AppendLine($"public {ConvertToCSharpType(column)} {column.Name.ToUpper()}" + " {get; set;}");
+            }
+            else
+            {
+                sb.AppendLine($"public {ConvertToCSharpType(column)} {Humanizer.StringDehumanizeExtensions.Dehumanize(column.Name)}" + " {get; set;}");
+            }
+            
             return sb;
         }
 
@@ -138,28 +146,33 @@ namespace CodeGenerator.GeneratorClases
                 case "datetime2":
                     if (isEntity)
                     {
-                        sb.AppendLine($"[Column(TypeName = \"{column.DataType.ToLower()}\")]");
+                        sb.AppendLine($"[Column(name:\"{column.Name}\",TypeName = \"{column.DataType.ToLower()}\")]");
                     }
                     break;
                 case "timestamp":
                     if (isEntity)
                     {
-                        sb.AppendLine($"[Column(TypeName = \"{column.DataType.ToLower()}\")]");
+                        sb.AppendLine($"[Column(name:\"{column.Name}\",TypeName = \"{column.DataType.ToLower()}\")]");
                         sb.AppendLine("[DatabaseGenerated(DatabaseGeneratedOption.Computed)]");
                         sb.AppendLine("[MaxLength(8)]");
                     }
                     break;
                 case "varchar":
                 case "nvarchar":
+                    if (isEntity)
+                    {
+                        sb.AppendLine($"[Column(name:\"{column.Name}\")]");
+                    }
                     sb.AppendLine($"[StringLength({column.Length})]");
                     break;
                 default:
+                    if (isEntity)
+                    {
+                        sb.AppendLine($"[Column(name:\"{column.Name}\")]");
+                    }
                     break;
             }
-            if (isEntity)
-            {
-                sb.AppendLine($"[Column(name:\"{column.Name}\")]");
-            }
+           
             return sb;
         }
     }

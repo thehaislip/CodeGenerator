@@ -29,9 +29,9 @@ namespace CodeGenerator.GeneratorClases
             var sb = new StringBuilder();
             sb.GetUsings()
                 .GetNamespace("GeneratedContext")
-                .GetClass("Context", "AuditContext")
-                .AppendLine(" public Context()")
-                .AppendLine($": base(\"name = {databaseName}Context\")")
+                .GetClass(databaseName, "AuditContext")
+                .AppendLine($"public {databaseName}()")
+                .AppendLine($": base(\"name = {databaseName}\")")
                 .AppendLine("{")
                 .AppendLine("}");
             sb.AppendLine(GetEntitySets(tables));
@@ -56,7 +56,7 @@ namespace CodeGenerator.GeneratorClases
             var sb = new StringBuilder();
             sb.AppendLine("protected override void OnModelCreating(DbModelBuilder modelBuilder)")
                   .AppendLine("{").ToString();
-            foreach (var table in tables.Take(10))
+            foreach (var table in tables)
             {
                 foreach (var colum in table.Columns.Where(e => e.DataType.ToLower() == "varchar"))
                 {
@@ -95,7 +95,7 @@ namespace CodeGenerator.GeneratorClases
         {
             sb.AppendLine(" public interface IAudit");
             sb.AppendLine("{");
-            sb.AppendLine("DateTime StampDateTime { get; set; }");
+            sb.AppendLine("DateTime StampDate { get; set; }");
             sb.AppendLine("string StampUser { get; set; }");
             sb.AppendLine("string StampAction { get; set; }");
             sb.AppendLine("int StampID { get; set; }");
@@ -132,7 +132,7 @@ namespace CodeGenerator.GeneratorClases
                 sb.GetProperty(column);
             }
             sb.AppendLine("public int StampID {get;set;}");
-            sb.AppendLine("public DateTime StampDateTime {get;set;}");
+            sb.AppendLine("public DateTime StampDate {get;set;}");
             sb.AppendLine("[Column(TypeName = \"char\")]");
             sb.AppendLine("public string StampAction {get;set;}");
             if (!table.Columns.Any(e => e.Name.ToLower() == "stampuser"))
@@ -174,7 +174,7 @@ namespace CodeGenerator.GeneratorClases
             sb.AppendLine("{");
             sb.AppendLine("private const string AuditActionColumnName = \"StampAction\";");
             sb.AppendLine("private const string AuditStampUserColumnName = \"StampUser\";");
-            sb.AppendLine("private const string AuditStampDateColumnName = \"StampDateTime\";");
+            sb.AppendLine("private const string AuditStampDateColumnName = \"StampDate\";");
             sb.AppendLine("private const string AuditStampIDColumnName = \"StampID\";");
             sb.AppendLine("");
             sb.AppendLine("private static Dictionary<Type, AuditTypeInfo> auditTypes = new Dictionary<Type, AuditTypeInfo>();");
@@ -381,7 +381,7 @@ namespace CodeGenerator.GeneratorClases
             sb.AppendLine("// Set the audit columns.");
             sb.AppendLine("auditEntityEntry.Property(AuditStampDateColumnName).CurrentValue = auditDateTime;");
             sb.AppendLine("auditEntityEntry.Property(AuditStampUserColumnName).CurrentValue = user;");
-            sb.AppendLine("auditEntityEntry.Property(AuditStampIDColumnName).CurrentValue = entityEntry.Property(\"Id\").CurrentValue;");
+            sb.AppendLine("auditEntityEntry.Property(AuditStampIDColumnName).CurrentValue = entityEntry.Property(\"ID\").CurrentValue;");
             sb.AppendLine("switch (entityEntry.State)");
             sb.AppendLine("{");
             sb.AppendLine("case EntityState.Modified:");
