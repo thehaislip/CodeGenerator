@@ -90,6 +90,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AngularInterfaceRepository.cs" />
     <Compile Include="ConnectionSettings.cs" />
     <Compile Include="Context.cs" />
     <Compile Include="Database.cs" />
@@ -103,6 +104,7 @@
     <Compile Include="SchemaRepository.cs" />
     <Compile Include="SQLConnection.cs" />
     <Compile Include="UserInfoRepository.cs" />
+    <Compile Include="ViewRepository.cs" />
     <Page Include="ConnectionString.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

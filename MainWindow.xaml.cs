@@ -91,6 +91,13 @@ namespace CodeGenerator
                 conn.ConnectionString = connString;
             }
             var saveLocation = PickFolder(conn.Database + "Views.cs");
+            if (saveLocation != "")
+            {
+                var schemaRepo = new SchemaRepository(conn);
+                var repo = new ViewRepository(schemaRepo);
+                var viewString = repo.GetViewString(conn.Database);
+                File.WriteAllText(saveLocation, viewString);
+            }
         }
 
         private void btnAngularClasses_Click(object sender, RoutedEventArgs e)
@@ -104,6 +111,13 @@ namespace CodeGenerator
                 conn.ConnectionString = connString;
             }
             var saveLocation = PickFolder(conn.Database + "Interfaces.ts");
+            if (saveLocation != "")
+            {
+                var schemaRepo = new SchemaRepository(conn);
+                var repo = new AngularInterfaceRepository(schemaRepo);
+                var angularString = repo.GetContextString(conn.Database);
+                File.WriteAllText(saveLocation, angularString);
+            }
         }
 
         private string PickFolder(string fileName)

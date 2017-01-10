@@ -64,9 +64,9 @@ namespace CodeGenerator.GeneratorClases
         {
             return sb.AppendLine("}");
         }
-        public static StringBuilder GetProperty(this StringBuilder sb, DatabaseColumn column)
+        public static StringBuilder GetProperty(this StringBuilder sb, DatabaseColumn column, bool isEntity = true)
         {
-            sb.GetDecorators(column);
+            sb.GetDecorators(column,isEntity);
             sb.AppendLine($"public {ConvertToCSharpType(column)} {Humanizer.StringDehumanizeExtensions.Dehumanize(column.Name)}" + " {get; set;}");
             return sb;
         }
@@ -120,9 +120,9 @@ namespace CodeGenerator.GeneratorClases
             }
             return strReturn;
         }
-        private static StringBuilder GetDecorators(this StringBuilder sb, DatabaseColumn column)
+        private static StringBuilder GetDecorators(this StringBuilder sb, DatabaseColumn column, bool isEntity = true)
         {
-            if (column.PrimaryKey)
+            if (column.PrimaryKey && isEntity)
             {
                 sb.AppendLine("[Key]");
                 sb.AppendLine("[DatabaseGenerated(DatabaseGeneratedOption.Identity)]");
@@ -136,12 +136,18 @@ namespace CodeGenerator.GeneratorClases
                 case "money":
                 case "date":
                 case "datetime2":
-                    sb.AppendLine($"[Column(TypeName = \"{column.DataType.ToLower()}\")]");
+                    if (isEntity)
+                    {
+                        sb.AppendLine($"[Column(TypeName = \"{column.DataType.ToLower()}\")]");
+                    }
                     break;
                 case "timestamp":
-                    sb.AppendLine($"[Column(TypeName = \"{column.DataType.ToLower()}\")]");
-                    sb.AppendLine("[DatabaseGenerated(DatabaseGeneratedOption.Computed)]");
-                    sb.AppendLine("[MaxLength(8)]");
+                    if (isEntity)
+                    {
+                        sb.AppendLine($"[Column(TypeName = \"{column.DataType.ToLower()}\")]");
+                        sb.AppendLine("[DatabaseGenerated(DatabaseGeneratedOption.Computed)]");
+                        sb.AppendLine("[MaxLength(8)]");
+                    }
                     break;
                 case "varchar":
                 case "nvarchar":
@@ -150,7 +156,10 @@ namespace CodeGenerator.GeneratorClases
                 default:
                     break;
             }
-            sb.AppendLine($"[Column(name:\"{column.Name}\")]");
+            if (isEntity)
+            {
+                sb.AppendLine($"[Column(name:\"{column.Name}\")]");
+            }
             return sb;
         }
     }
