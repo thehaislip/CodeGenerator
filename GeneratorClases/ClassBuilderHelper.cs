@@ -150,6 +150,7 @@ namespace CodeGenerator.GeneratorClases
                 default:
                     break;
             }
+            sb.AppendLine($"[Column(name:\"{column.Name}\")]");
             return sb;
         }
     }

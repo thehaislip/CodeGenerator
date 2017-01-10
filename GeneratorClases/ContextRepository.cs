@@ -47,6 +47,7 @@ namespace CodeGenerator.GeneratorClases
             foreach (var table in tables)
             {
                 sb.AppendLine($"public virtual DbSet<{table.Name}> {table.Name.Pluralize()} {"{ get; set; }"}");
+                sb.AppendLine($"public virtual DbSet<{table.Name}Audit> {(table.Name + "Audit").Pluralize()} {"{ get; set; }"}");
             }
             return sb.ToString();
         }
@@ -63,6 +64,7 @@ namespace CodeGenerator.GeneratorClases
                    .AppendLine($".Property(e => e.{StringDehumanizeExtensions.Dehumanize(colum.Name)})")
                    .AppendLine(".IsUnicode(false);");
                 }
+                sb.AppendLine($"RegisterAuditType(typeof({table.Name}), typeof({table.Name}Audit));");
             }
             sb.GetFunctionEnd();
             return sb.ToString();
@@ -95,15 +97,15 @@ namespace CodeGenerator.GeneratorClases
             sb.AppendLine("{");
             sb.AppendLine("DateTime StampDateTime { get; set; }");
             sb.AppendLine("string StampUser { get; set; }");
-            sb.AppendLine("char StampAction { get; set; }");
+            sb.AppendLine("string StampAction { get; set; }");
             sb.AppendLine("int StampID { get; set; }");
             sb.AppendLine("}");
         }
         private static void GetIAuditableInterface(StringBuilder sb)
         {
-
             sb.AppendLine(" public interface IAuditable");
             sb.AppendLine("{");
+            sb.AppendLine("int ID {get;set;}");
             sb.AppendLine("}");
         }
 
@@ -113,7 +115,7 @@ namespace CodeGenerator.GeneratorClases
             sb.AppendLine("{");
             sb.AppendLine("internal AuditTypeInfo()");
             sb.AppendLine("{");
-            sb.AppendLine("    this.AuditProperties = new Collection<string>();");
+            sb.AppendLine("this.AuditProperties = new Collection<string>();");
             sb.AppendLine("}");
             sb.AppendLine("internal Type EntityType { get; set; }");
             sb.AppendLine("internal Type AuditEntityType { get; set; }");
@@ -131,7 +133,8 @@ namespace CodeGenerator.GeneratorClases
             }
             sb.AppendLine("public int StampID {get;set;}");
             sb.AppendLine("public DateTime StampDateTime {get;set;}");
-            sb.AppendLine("public char StampAction {get;set;}");
+            sb.AppendLine("[Column(TypeName = \"char\")]");
+            sb.AppendLine("public string StampAction {get;set;}");
             if (!table.Columns.Any(e => e.Name.ToLower() == "stampuser"))
             {
                 sb.AppendLine("public string StampUser {get;set;}");
@@ -153,12 +156,12 @@ namespace CodeGenerator.GeneratorClases
 
                 if (navProp.RelationshipType == "One")
                 {
-                    sb.AppendLine($"[ForeignKey(\"{navProp.ColumnName}\")]");
+                    sb.AppendLine($"[ForeignKey(\"{Humanizer.StringDehumanizeExtensions.Dehumanize(navProp.Column)}\")]");
                     sb.AppendLine($"public virtual {navProp.RelatedTable} {navProp.RelatedTable}" + "{get; set;}");
                 }
                 else
                 {
-                    sb.AppendLine($"[ForeignKey(\"{navProp.RelatedColumn}\")]");
+                    sb.AppendLine($"[ForeignKey(\"{Humanizer.StringDehumanizeExtensions.Dehumanize(navProp.RelatedColumn)}\")]");
                     sb.AppendLine($"public virtual ICollection<{navProp.RelatedTable}> {navProp.RelatedTable}s" + "{get; set;}");
                 }
             }
@@ -169,7 +172,7 @@ namespace CodeGenerator.GeneratorClases
         {
             sb.AppendLine("public class AuditContext : DbContext");
             sb.AppendLine("{");
-            sb.AppendLine("private const string AuditActionColumnName = \"Action\";");
+            sb.AppendLine("private const string AuditActionColumnName = \"StampAction\";");
             sb.AppendLine("private const string AuditStampUserColumnName = \"StampUser\";");
             sb.AppendLine("private const string AuditStampDateColumnName = \"StampDateTime\";");
             sb.AppendLine("private const string AuditStampIDColumnName = \"StampID\";");
@@ -317,9 +320,32 @@ namespace CodeGenerator.GeneratorClases
             sb.AppendLine("try");
             sb.AppendLine("{");
             sb.AppendLine("var changes = ChangeTracker.Entries<IAuditable>().Where(i => i.State == EntityState.Added);");
+            sb.AppendLine("base.SaveChanges();");
+            sb.AppendLine("foreach (var audit in audits)");
+            sb.AppendLine("{");
+            sb.AppendLine("foreach (var change in changes)");
+            sb.AppendLine("{");
+            sb.AppendLine("if (audit.GetType() == auditTypes[change.Entity.GetType()].AuditEntityType)");
+            sb.AppendLine("{");
+            sb.AppendLine("var changeType = change.Entity.GetType();");
+            sb.AppendLine("foreach (var prop in changeType.GetProperties())");
+            sb.AppendLine("{");
+            sb.AppendLine("foreach (var auditProps in audit.GetType().GetProperties())");
+            sb.AppendLine("{");
+            sb.AppendLine("if (prop.Name == auditProps.Name)");
+            sb.AppendLine("{");
+            sb.AppendLine("if (auditProps.Name.ToLower() != \"id\")");
+            sb.AppendLine("{");
+            sb.AppendLine("auditProps.SetValue(audit, prop.GetValue(change.Entity));");
+            sb.AppendLine("}");
+            sb.AppendLine("}");
+            sb.AppendLine("}");
+            sb.AppendLine("}");
+            sb.AppendLine("audit.StampID = change.Entity.ID;");
+            sb.AppendLine("}");
+            sb.AppendLine("}");
+            sb.AppendLine("}");
             sb.AppendLine("return base.SaveChanges();");
-            sb.AppendLine("                ");
-            sb.AppendLine("                    ");
             sb.AppendLine("}");
             sb.AppendLine("catch (Exception)");
             sb.AppendLine("{");
