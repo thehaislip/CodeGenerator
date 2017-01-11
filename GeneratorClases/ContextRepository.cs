@@ -46,8 +46,17 @@ namespace CodeGenerator.GeneratorClases
             var sb = new StringBuilder();
             foreach (var table in tables)
             {
-                sb.AppendLine($"public virtual DbSet<{table.Name}> {table.Name.Pluralize()} {"{ get; set; }"}");
-                sb.AppendLine($"public virtual DbSet<{table.Name}Audit> {(table.Name + "Audit").Pluralize()} {"{ get; set; }"}");
+                if (table.Name.ToLower().EndsWith("person"))
+                {
+                    sb.AppendLine($"public virtual DbSet<{table.Name}> {table.Name}s {"{ get; set; }"}");
+                    sb.AppendLine($"public virtual DbSet<{table.Name}Audit> {(table.Name + "Audit")}s {"{ get; set; }"}");
+                }
+                else
+                {
+                    sb.AppendLine($"public virtual DbSet<{table.Name}> {table.Name.Pluralize()} {"{ get; set; }"}");
+                    sb.AppendLine($"public virtual DbSet<{table.Name}Audit> {(table.Name + "Audit").Pluralize()} {"{ get; set; }"}");
+                }
+                
             }
             return sb.ToString();
         }
