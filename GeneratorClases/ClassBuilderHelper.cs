@@ -110,6 +110,8 @@ namespace CodeGenerator.GeneratorClases
                     break;
                 case "timestamp":
                 case "image":
+                case "varbinary":
+                case "binary":
                     strReturn = "byte[]";
                     break;
                 case "uniqueidentifier":
