@@ -106,6 +106,8 @@ namespace CodeGenerator.GeneratorClases
                     break;
                 case "varchar":
                 case "nvarchar":
+                case "char":
+                case "nchar":
                     strReturn = "string";
                     break;
                 case "timestamp":
@@ -164,11 +166,16 @@ namespace CodeGenerator.GeneratorClases
                     break;
                 case "varchar":
                 case "nvarchar":
+                case "char":
+                case "nchar":
                     if (isEntity)
                     {
                         sb.AppendLine($"[Column(name:\"{column.Name}\")]");
                     }
-                    sb.AppendLine($"[StringLength({column.Length})]");
+                    if (column.Length != "-1")
+                    {
+                        sb.AppendLine($"[StringLength({column.Length})]");
+                    }
                     break;
                 default:
                     if (isEntity)
