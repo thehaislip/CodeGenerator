@@ -48,13 +48,13 @@ namespace CodeGenerator.GeneratorClases
             {
                 if (table.Name.ToLower().EndsWith("person"))
                 {
-                    sb.AppendLine($"public virtual DbSet<{table.Name}> {table.Name}s {"{ get; set; }"}");
-                    sb.AppendLine($"public virtual DbSet<{table.Name}Audit> {(table.Name + "Audit")}s {"{ get; set; }"}");
+                    sb.AppendLine($"public virtual DbSet<{table.Name}> {table.Name}s {{ get; set; }}");
+                    sb.AppendLine($"public virtual DbSet<{table.Name}Audit> {(table.Name + "Audit")}s {{ get; set; }}");
                 }
                 else
                 {
-                    sb.AppendLine($"public virtual DbSet<{table.Name}> {table.Name.Pluralize()} {"{ get; set; }"}");
-                    sb.AppendLine($"public virtual DbSet<{table.Name}Audit> {(table.Name + "Audit").Pluralize()} {"{ get; set; }"}");
+                    sb.AppendLine($"public virtual DbSet<{table.Name}> {table.Name.Pluralize()} {{ get; set; }}");
+                    sb.AppendLine($"public virtual DbSet<{table.Name}Audit> {(table.Name + "Audit").Pluralize()} {{ get; set; }}");
                 }
 
             }
@@ -70,7 +70,7 @@ namespace CodeGenerator.GeneratorClases
                 foreach (var colum in table.Columns.Where(e => e.DataType.ToLower() == "varchar"))
                 {
                     sb.AppendLine($"modelBuilder.Entity<{table.Name}>()")
-                   .AppendLine($".Property(e => e.{StringDehumanizeExtensions.Dehumanize(colum.Name)})")
+                   .AppendLine($".Property(e => e.{colum.Name.Dehumanize()})")
                    .AppendLine(".IsUnicode(false);");
                 }
                 sb.AppendLine($"RegisterAuditType(typeof({table.Name}), typeof({table.Name}Audit));");
@@ -144,7 +144,7 @@ namespace CodeGenerator.GeneratorClases
             sb.AppendLine("public DateTime StampDate {get;set;}");
             sb.AppendLine("[Column(TypeName = \"char\")]");
             sb.AppendLine("public string StampAction {get;set;}");
-            if (!table.Columns.Any(e => e.Name.ToLower() == "stampuser"))
+            if (table.Columns.All(e => e.Name.ToLower() != "stampuser"))
             {
                 sb.AppendLine("public string StampUser {get;set;}");
             }
@@ -162,15 +162,19 @@ namespace CodeGenerator.GeneratorClases
             }
             foreach (var navProp in table.NavigationProperties)
             {
-
+                var relatedTable = navProp.RelatedTable;
+                if (string.Equals(relatedTable, table.Name, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    relatedTable = $"Super{relatedTable}";
+                }
                 if (navProp.RelationshipType == "One")
                 {
-                    sb.AppendLine($"[ForeignKey(\"{Humanizer.StringDehumanizeExtensions.Dehumanize(navProp.Column)}\")]");
-                    sb.AppendLine($"public virtual {navProp.RelatedTable} {navProp.RelatedTable}" + "{get; set;}");
+                    sb.AppendLine($"[ForeignKey(\"{navProp.Column.Dehumanize()}\")]");
+                    sb.AppendLine($"public virtual {navProp.RelatedTable} {relatedTable}" + "{get; set;}");
                 }
                 else
                 {
-                    sb.AppendLine($"[ForeignKey(\"{Humanizer.StringDehumanizeExtensions.Dehumanize(navProp.RelatedColumn)}\")]");
+                    sb.AppendLine($"[ForeignKey(\"{navProp.RelatedColumn.Dehumanize()}\")]");
                     sb.AppendLine($"public virtual ICollection<{navProp.RelatedTable}> {navProp.RelatedTable}s" + "{get; set;}");
                 }
             }
