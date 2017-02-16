@@ -40,13 +40,26 @@ namespace CodeGenerator.GeneratorClases
 
         public static StringBuilder GetConstructor(this StringBuilder sb, DatabaseTable table, bool isAudit = false)
         {
+
             sb.AppendLine($"public {table.Name}{(isAudit ? "Audit" : "")}()");
             sb.AppendLine("{");
             if (!isAudit)
             {
+                var tablesUsed = new List<string>();
                 foreach (var item in table.NavigationProperties.Where(e => e.RelationshipType == "Many"))
                 {
-                    sb.AppendLine($"this.{item.RelatedTable}s = new HashSet<{item.RelatedTable}>();");
+                    var relatedTable = item.RelatedTable;
+
+                    if (string.Equals(relatedTable, table.Name, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        relatedTable = $"Super{relatedTable}";
+                    }
+                    if (tablesUsed.Any(e => e == relatedTable))
+                    {
+                        relatedTable = $"{relatedTable}{tablesUsed.Count(e => e == relatedTable)}";
+                    }
+                    tablesUsed.Add(relatedTable);
+                    sb.AppendLine($"this.{relatedTable}s = new HashSet<{item.RelatedTable}>();");
                 }
             }
             sb.AppendLine("}");

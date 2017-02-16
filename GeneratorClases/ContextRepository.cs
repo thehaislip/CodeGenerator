@@ -160,13 +160,21 @@ namespace CodeGenerator.GeneratorClases
             {
                 sb.GetProperty(column);
             }
+            var tablesUsed = new List<string>();
+            
             foreach (var navProp in table.NavigationProperties)
             {
                 var relatedTable = navProp.RelatedTable;
+                
                 if (string.Equals(relatedTable, table.Name, StringComparison.CurrentCultureIgnoreCase))
                 {
                     relatedTable = $"Super{relatedTable}";
                 }
+                if (tablesUsed.Any(e => e == relatedTable))
+                {
+                    relatedTable = $"{relatedTable}{tablesUsed.Count(e => e == relatedTable)}";
+                }
+                tablesUsed.Add(relatedTable);
                 if (navProp.RelationshipType == "One")
                 {
                     sb.AppendLine($"[ForeignKey(\"{navProp.Column.Dehumanize()}\")]");
@@ -175,7 +183,7 @@ namespace CodeGenerator.GeneratorClases
                 else
                 {
                     sb.AppendLine($"[ForeignKey(\"{navProp.RelatedColumn.Dehumanize()}\")]");
-                    sb.AppendLine($"public virtual ICollection<{navProp.RelatedTable}> {navProp.RelatedTable}s" + "{get; set;}");
+                    sb.AppendLine($"public virtual ICollection<{navProp.RelatedTable}> {relatedTable}s" + "{get; set;}");
                 }
             }
             sb.GetClassEnd();
