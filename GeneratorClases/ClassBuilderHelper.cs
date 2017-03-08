@@ -80,13 +80,19 @@ namespace CodeGenerator.GeneratorClases
         public static StringBuilder GetProperty(this StringBuilder sb, DatabaseColumn column, bool isEntity = true)
         {
             sb.GetDecorators(column,isEntity);
+            
             if (column.Name.ToLower() == "id")
             {
                 sb.AppendLine($"public {ConvertToCSharpType(column)} {column.Name.ToUpper()}" + " {get; set;}");
             }
             else
             {
-                sb.AppendLine($"public {ConvertToCSharpType(column)} {Humanizer.StringDehumanizeExtensions.Dehumanize(column.Name)}" + " {get; set;}");
+                var colName = string.Copy(column.Name);
+                if (column.TableName.ToLower() == column.Name.ToLower())
+                {
+                    colName = colName + "COL";
+                }
+                sb.AppendLine($"public {ConvertToCSharpType(column)} {Humanizer.StringDehumanizeExtensions.Dehumanize(colName)}" + " {get; set;}");
             }
             
             return sb;

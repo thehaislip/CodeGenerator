@@ -18,5 +18,6 @@ namespace CodeGenerator
         public string ExtendedProp { get;  set; }
         public bool PrimaryKey { get; internal set; }
         public bool ForeignKey { get; internal set; }
+        public string TableName { get; set; }
     }
 }

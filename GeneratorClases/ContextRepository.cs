@@ -69,8 +69,13 @@ namespace CodeGenerator.GeneratorClases
             {
                 foreach (var colum in table.Columns.Where(e => e.DataType.ToLower() == "varchar"))
                 {
+                    var colName = string.Copy(colum.Name);
+                    if (colum.Name.ToLower() == colum.TableName.ToLower())
+                    {
+                        colName += "COL";
+                    }
                     sb.AppendLine($"modelBuilder.Entity<{table.Name}>()")
-                   .AppendLine($".Property(e => e.{colum.Name.Dehumanize()})")
+                   .AppendLine($".Property(e => e.{colName.Dehumanize()})")
                    .AppendLine(".IsUnicode(false);");
                 }
                 sb.AppendLine($"RegisterAuditType(typeof({table.Name}), typeof({table.Name}Audit));");

@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-D:\Repos\CodeGenerator\obj\Release\
+C:\Users\ITPR16638\Source\Repos\CodeGenerator\obj\Release\
 CodeGenerator
 none
 false
 TRACE
-D:\Repos\CodeGenerator\App.xaml
+C:\Users\ITPR16638\Source\Repos\CodeGenerator\App.xaml
 2-1529604937
 21722692148
 19522167077
-70581633989
+701195489544
 ConnectionString.xaml;MainWindow.xaml;
 
 False
