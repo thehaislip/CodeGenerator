@@ -292,7 +292,7 @@ namespace CodeGenerator.GeneratorClases
             sb.AppendLine("this.Entry(entity).Reload();");
             sb.AppendLine("}");
             sb.AppendLine("");
-            sb.AppendLine("  public string GetClaimValue(this IPrincipal currentPrincipal, string key)");
+            sb.AppendLine("  public string GetClaimValue(IPrincipal currentPrincipal, string key)");
             sb.AppendLine("  {");
             sb.AppendLine("      var identity = currentPrincipal.Identity as ClaimsIdentity;");
             sb.AppendLine("      if (identity == null)");
