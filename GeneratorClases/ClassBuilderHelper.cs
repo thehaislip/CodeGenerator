@@ -77,7 +77,7 @@ namespace CodeGenerator.GeneratorClases
         {
             return sb.AppendLine("}");
         }
-        public static StringBuilder GetProperty(this StringBuilder sb, DatabaseColumn column, bool isEntity = true)
+        public static StringBuilder GetProperty(this StringBuilder sb, DatabaseColumn column,string tableName, bool isEntity = true)
         {
             sb.GetDecorators(column,isEntity);
             if (column.Name.ToLower() == "id")
@@ -86,7 +86,12 @@ namespace CodeGenerator.GeneratorClases
             }
             else
             {
-                sb.AppendLine($"public {ConvertToCSharpType(column)} {Humanizer.StringDehumanizeExtensions.Dehumanize(column.Name)}" + " {get; set;}");
+                var colName = column.Name;
+                if (column.Name == tableName)
+                {
+                    colName += "Column";
+                }
+                sb.AppendLine($"public {ConvertToCSharpType(column)} {Humanizer.StringDehumanizeExtensions.Dehumanize(colName)}" + " {get; set;}");
             }
             
             return sb;

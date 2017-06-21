@@ -28,7 +28,7 @@ namespace CodeGenerator
                 foreach (var column in table.Columns)
                 {
                     column.PrimaryKey = false;
-                    sb.GetProperty(column, isEntity: false);
+                    sb.GetProperty(column,table.Name, isEntity: false);
                 }
                 foreach (var rel in table.NavigationProperties.Where(e => e.RelationshipType.ToLower() == "many"))
                 {

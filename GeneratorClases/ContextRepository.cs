@@ -69,8 +69,13 @@ namespace CodeGenerator.GeneratorClases
             {
                 foreach (var colum in table.Columns.Where(e => e.DataType.ToLower() == "varchar"))
                 {
+                    var colName = colum.Name;
+                    if (colName == table.Name)
+                    {
+                        colName += "Column";
+                    }
                     sb.AppendLine($"modelBuilder.Entity<{table.Name}>()")
-                   .AppendLine($".Property(e => e.{colum.Name.Dehumanize()})")
+                   .AppendLine($".Property(e => e.{colName.Dehumanize()})")
                    .AppendLine(".IsUnicode(false);");
                 }
                 sb.AppendLine($"RegisterAuditType(typeof({table.Name}), typeof({table.Name}Audit));");
@@ -138,7 +143,7 @@ namespace CodeGenerator.GeneratorClases
             sb.GetConstructor(table, isAudit: true);
             foreach (var column in table.Columns)
             {
-                sb.GetProperty(column);
+                sb.GetProperty(column,table.Name);
             }
             sb.AppendLine("public int StampID {get;set;}");
             sb.AppendLine("public DateTime StampDate {get;set;}");
@@ -158,10 +163,10 @@ namespace CodeGenerator.GeneratorClases
             sb.GetConstructor(table);
             foreach (var column in table.Columns)
             {
-                sb.GetProperty(column);
+                sb.GetProperty(column,table.Name);
             }
             var tablesUsed = new List<string>();
-            
+            var tableCounts = new Dictionary<string,int>();
             foreach (var navProp in table.NavigationProperties)
             {
                 var relatedTable = navProp.RelatedTable;
@@ -172,7 +177,11 @@ namespace CodeGenerator.GeneratorClases
                 }
                 if (tablesUsed.Any(e => e == relatedTable))
                 {
-                    relatedTable = $"{relatedTable}{tablesUsed.Count(e => e == relatedTable)}";
+                    if (!tableCounts.ContainsKey(relatedTable))
+                    {
+                        tableCounts.Add(relatedTable,1);
+                    }
+                    relatedTable = $"{relatedTable}{tableCounts[relatedTable]++}";
                 }
                 tablesUsed.Add(relatedTable);
                 if (navProp.RelationshipType == "One")
@@ -332,10 +341,15 @@ namespace CodeGenerator.GeneratorClases
             sb.AppendLine("    {");
             sb.AppendLine("        audits.Add(this.AuditEntity(auditable, auditTypes[entityType], updateDateTime.Value, user));");
             sb.AppendLine("    }");
+
             sb.AppendLine("}");
             sb.AppendLine("else if (auditable.State == EntityState.Deleted)");
             sb.AppendLine("{");
             sb.AppendLine("    Type entityType = auditable.Entity.GetType().BaseType;");
+            sb.AppendLine("           if (entityType == typeof(object))");
+            sb.AppendLine("{");
+            sb.AppendLine("   entityType = auditable.Entity.GetType();");
+            sb.AppendLine("}");
             sb.AppendLine("    audits.Add(this.AuditEntity(auditable, auditTypes[entityType], updateDateTime.Value, user));");
             sb.AppendLine("}");
             sb.AppendLine("");
