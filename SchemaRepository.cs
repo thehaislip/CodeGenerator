@@ -79,7 +79,8 @@ namespace CodeGenerator
                         ExtendedPropName = rdr["Extended_Property_Name"].ToString(),
                         ExtendedProp = rdr["Extended_Property"].ToString(),
                         PrimaryKey = rdr["PrimaryKey"].ToString() == "1",
-                        ForeignKey = rdr["FOREIGNKEY"].ToString() == "1"
+                        ForeignKey = rdr["FOREIGNKEY"].ToString() == "1",
+                        TableName = rdr["table_name"].ToString()
                     });
                     
                 }
