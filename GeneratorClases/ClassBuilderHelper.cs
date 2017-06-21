@@ -19,8 +19,9 @@ namespace CodeGenerator.GeneratorClases
                 .AppendLine("using System.Collections.Generic;")
                 .AppendLine("using System.Collections.ObjectModel;")
                 .AppendLine("using System.Data.Entity.Infrastructure;")
-                .AppendLine("using System.Security.Principal;");
-
+                .AppendLine("using System.Security.Principal;")
+                .AppendLine("using System.Security.Principal;")
+                .AppendLine("using System.Security.Claims; ");
         }
         public static StringBuilder GetNamespace(this StringBuilder sb, string ns)
         {
@@ -77,9 +78,9 @@ namespace CodeGenerator.GeneratorClases
         {
             return sb.AppendLine("}");
         }
-        public static StringBuilder GetProperty(this StringBuilder sb, DatabaseColumn column,string tableName, bool isEntity = true)
+        public static StringBuilder GetProperty(this StringBuilder sb, DatabaseColumn column, string tableName, bool isEntity = true)
         {
-            sb.GetDecorators(column,isEntity);
+            sb.GetDecorators(column, isEntity);
             if (column.Name.ToLower() == "id")
             {
                 sb.AppendLine($"public {ConvertToCSharpType(column)} {column.Name.ToUpper()}" + " {get; set;}");
@@ -93,7 +94,7 @@ namespace CodeGenerator.GeneratorClases
                 }
                 sb.AppendLine($"public {ConvertToCSharpType(column)} {Humanizer.StringDehumanizeExtensions.Dehumanize(colName)}" + " {get; set;}");
             }
-            
+
             return sb;
         }
 
@@ -202,7 +203,7 @@ namespace CodeGenerator.GeneratorClases
                     }
                     break;
             }
-           
+
             return sb;
         }
     }
