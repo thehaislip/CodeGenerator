@@ -40,7 +40,7 @@ namespace CodeGenerator
                 .Append(" WHERE class = 1)")
                 .Append(" ep on ep.[Column_Name] = c.COLUMN_NAME")
                 .Append(" join sys.tables t on t.name = c.TABLE_NAME")
-                .Append("INNER JOIN sys.schemas tschema on t.schema_id = tschema.schema_id")
+                .Append(" INNER JOIN sys.schemas tschema on t.schema_id = tschema.schema_id")
                 .Append(" where t.type = 'u' and t.name not like 'sysdiagrams%' and t.name not like '%aud' and t.name not like '%audit' and tschema.name = 'dbo'")
                 .Append(" group by c.table_name, c.COLUMN_NAME, IS_NULLABLE, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, NUMERIC_PRECISION, Numeric_Scale , ep.[Extended_Property_Name], ep.[Extended_Property]")
                 .Append(" order by c.table_name");
@@ -130,7 +130,7 @@ namespace CodeGenerator
                     var rel = new DatabaseRelationship();
                     rel.Column = rdr["ColumnName"].ToString();
                     rel.Table = rdr["TableName"].ToString();
-                    rel.Column = rdr["ColumnName"].ToString();
+                    rel.ColumnName = rdr["ColumnName"].ToString();
                     rel.RelatedTable = rdr["RelatedTable"].ToString();
                     rel.RelatedColumn = rdr["RelatedColumn"].ToString();
                     rel.RelationshipType = rdr["RelationKind"].ToString();

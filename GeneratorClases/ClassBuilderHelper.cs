@@ -105,6 +105,7 @@ namespace CodeGenerator.GeneratorClases
             {
                 case "int":
                 case "tinyint":
+                case "bigint":
                     strReturn = "int";
                     break;
                 case "decimal":

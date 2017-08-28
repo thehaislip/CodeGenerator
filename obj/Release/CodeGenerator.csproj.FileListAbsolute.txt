@@ -124,3 +124,4 @@ C:\Users\ITPR16638\Source\Repos\CodeGenerator\obj\Release\CodeGenerator.Properti
 C:\Users\ITPR16638\Source\Repos\CodeGenerator\obj\Release\CodeGenerator.csproj.GenerateResource.Cache
 C:\Users\ITPR16638\Source\Repos\CodeGenerator\obj\Release\CodeGenerator.exe
 C:\Users\ITPR16638\Source\Repos\CodeGenerator\obj\Release\CodeGenerator.pdb
+D:\Repos\CodeGenerator\obj\Release\CodeGenerator.csproj.CoreCompileInputs.cache
