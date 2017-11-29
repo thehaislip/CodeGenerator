@@ -90,20 +90,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AngularInterfaceRepository.cs" />
+    <Compile Include="GeneratorClases\AngularInterfaceRepository.cs" />
     <Compile Include="Models\ConnectionSettings.cs" />
     <Compile Include="Models\DatabaseColumn.cs" />
     <Compile Include="Models\DatabaseRelationship.cs" />
     <Compile Include="Models\DatabaseTable.cs" />
     <Compile Include="GeneratorClases\AngularViewRepository.cs" />
     <Compile Include="GeneratorClases\ClassBuilderHelper.cs" />
-    <Compile Include="GeneratorClases\ClassDefinition.cs" />
+    <Compile Include="Models\ClassDefinition.cs" />
     <Compile Include="GeneratorClases\ContextRepository.cs" />
     <Compile Include="GeneratorClases\ViewClassRepository.cs" />
-    <Compile Include="SchemaRepository.cs" />
-    <Compile Include="SQLConnection.cs" />
-    <Compile Include="UserInfoRepository.cs" />
-    <Compile Include="ViewRepository.cs" />
+    <Compile Include="GeneratorClases\SchemaRepository.cs" />
+    <Compile Include="GeneratorClases\SQLConnection.cs" />
+    <Compile Include="GeneratorClases\UserInfoRepository.cs" />
+    <Compile Include="GeneratorClases\ViewRepository.cs" />
     <Page Include="ConnectionString.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -151,15 +151,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="info.mdf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="info_log.ldf">
-      <DependentUpon>info.mdf</DependentUpon>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
