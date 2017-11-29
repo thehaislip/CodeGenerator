@@ -28,6 +28,7 @@
         <Button x:Name="btnDatabaseClasses" Content="Database" Grid.Row="2" Margin="10" Click="btnDatabaseClasses_Click"  />
         <Button x:Name="btnViewClasses" Content="View" Grid.Row="2" Grid.Column="1" Margin="10" Click="btnViewClasses_Click"  />
         <Button x:Name="btnAngularClasses" Content="Angular" Grid.Row="2" Grid.Column="2" Margin="10" Click="btnAngularClasses_Click"  />
+        <CheckBox x:Name="chkMultipleFiles"  Content="Multiple Files" HorizontalAlignment="Left" Margin="10,19,0,0" Grid.Row="3" VerticalAlignment="Top"/>
 
     </Grid>
 </Window>

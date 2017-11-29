@@ -97,6 +97,7 @@
     <Compile Include="DatabaseTable.cs" />
     <Compile Include="GeneratorClases\AngularViewRepository.cs" />
     <Compile Include="GeneratorClases\ClassBuilderHelper.cs" />
+    <Compile Include="GeneratorClases\ClassDefinition.cs" />
     <Compile Include="GeneratorClases\ContextRepository.cs" />
     <Compile Include="GeneratorClases\ViewClassRepository.cs" />
     <Compile Include="SchemaRepository.cs" />

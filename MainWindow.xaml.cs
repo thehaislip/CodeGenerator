@@ -67,16 +67,35 @@ namespace CodeGenerator
             {
                 conn.ConnectionString = connString;
             }
-            var saveLocation = PickFolder(conn.Database + "Context.cs");
-            if (saveLocation != "")
+
+            var schemaRepo = new SchemaRepository(conn);
+            var repo = new ContextRepository(schemaRepo);
+            
+            if (chkMultipleFiles.IsChecked.GetValueOrDefault())
             {
-                var schemaRepo = new SchemaRepository(conn);
-                var repo = new ContextRepository(schemaRepo);
-                var contextString = repo.GetContextString(conn.Database);
-                var classes = repo.GetEntityClasses();
-                contextString += classes;
-                File.WriteAllText(saveLocation, contextString);
+                var classes = repo.GetEntityClassesAsList();
+                var folder = new System.Windows.Forms.FolderBrowserDialog();
+                folder.ShowDialog();
+                var path = folder.SelectedPath;
+                File.WriteAllText(System.IO.Path.Combine(path, conn.Database + "Context.cs"), repo.GetContextString(conn.Database));
+                foreach (var item in classes)
+                {
+                    File.WriteAllText(System.IO.Path.Combine( path ,item.ClassName + ".cs"), item.Definition);
+                }
             }
+            else
+            {
+                var saveLocation = PickFolder(conn.Database + "Context.cs");
+                if (saveLocation != "")
+                {
+                    var contextString = repo.GetContextString(conn.Database);
+                    var classes = repo.GetEntityClasses();
+                    contextString += classes;
+                    File.WriteAllText(saveLocation, contextString);
+                }
+            }
+
+
 
         }
 

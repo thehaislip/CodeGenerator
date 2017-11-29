@@ -84,6 +84,61 @@ namespace CodeGenerator.GeneratorClases
             return sb.ToString();
         }
 
+        internal List<ClassDefinition> GetEntityClassesAsList()
+        {
+            var list = new List<ClassDefinition>();
+            var sb = new StringBuilder();
+
+            //Generate Audit Interface
+            sb.GetUsings();
+            sb.GetNamespace("GeneratedContext");
+            GetIAuditInterface(sb);
+            sb.GetNamespaceEnd();
+            list.Add(new ClassDefinition( "IAuditInterface", sb.ToString()) );
+
+            //Generate Auditable Interface
+            sb = new StringBuilder();
+            sb.GetUsings();
+            sb.GetNamespace("GeneratedContext");
+            GetIAuditableInterface(sb);
+            sb.GetNamespaceEnd();
+            list.Add(new ClassDefinition("IAuditableInterface",sb.ToString()));
+
+            //Generate AuditTypeInfo class
+            sb = new StringBuilder();
+            sb.GetUsings();
+            sb.GetNamespace("GeneratedContext");
+            GetAuditTypeInfo(sb);
+            sb.GetNamespaceEnd();
+            list.Add(new ClassDefinition("AuditTypeInfo",sb.ToString()));
+
+            //Generate auditcontext class
+            sb = new StringBuilder();
+            sb.GetUsings();
+            sb.GetNamespace("GeneratedContext");
+            GetAuditContext(sb);
+            sb.GetNamespaceEnd();
+            list.Add(new ClassDefinition("AuditContext",sb.ToString()));
+
+            //Generate Table clases
+           
+            foreach (var table in tables)
+            {
+                sb = new StringBuilder();
+                sb.GetUsings();
+                sb.GetNamespace("GeneratedContext");
+
+                //Regular Tables
+                GetRegularTables(sb, table);
+                //Audit Tables
+                GetAuditTables(sb, table);
+                sb.GetNamespaceEnd();
+                list.Add(new ClassDefinition(table.Name,sb.ToString()));
+            }
+
+            return list;
+        }
+
         public string GetEntityClasses()
         {
             var sb = new StringBuilder();
