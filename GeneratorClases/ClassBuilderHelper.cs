@@ -20,7 +20,6 @@ namespace CodeGenerator.GeneratorClases
                 .AppendLine("using System.Collections.ObjectModel;")
                 .AppendLine("using System.Data.Entity.Infrastructure;")
                 .AppendLine("using System.Security.Principal;")
-                .AppendLine("using System.Security.Principal;")
                 .AppendLine("using System.Security.Claims; ");
         }
         public static StringBuilder GetNamespace(this StringBuilder sb, string ns)
